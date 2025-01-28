@@ -12,19 +12,16 @@ pipeline {
         }
         stage('Run Tests') {             
             steps {                 
-                # Run npm test
                 sh 'npm run test'             
             }         
         }         
         stage('Build') {             
             steps {                 
-                # Build the application
                 sh 'npm run build'             
             }         
         }         
         stage('Deploy') {             
             steps {                 
-                # Deploy the application using PM2
                 sh '''                 
                 pm2 stop app || true                 
                 pm2 start app.js --name "node-app"                 
@@ -33,7 +30,6 @@ pipeline {
         }     
         stage('Run Application') {
             steps {
-                # Start the application
                 sh '''
                 echo "Starting the application..."
                 npm start
