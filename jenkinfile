@@ -1,0 +1,52 @@
+pipeline {     
+    agent any      
+    stages {         
+        stage('Install Dependencies') {             
+            steps {                 
+                // Install Node.js and npm
+                sh '''                 
+                echo "Installing Node.js and npm..."                 
+                curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -                 
+                sudo apt-get install -y nodejs                 
+                '''                 
+                // Install npm dependencies                 
+                sh 'npm install'             
+            }  
+        }
+        stage('Run Tests') {             
+            steps {                 
+                // Run custom test script
+                sh 'npm run test'             
+            }         
+        }         
+        stage('Build') {             
+            steps {                 
+                sh 'npm run build'             
+            }         
+        }         
+        stage('Deploy') {             
+            steps {                 
+                sh '''                 
+                pm2 stop app || true                 
+                pm2 start app.js --name "node-app"                 
+                '''             
+            }         
+        }     
+        stage('Run Application') {
+            steps {
+                sh '''
+                echo "Starting the application..."
+                npm start
+                '''
+            }
+        }     
+    }      
+    post {         
+        success {             
+            echo 'Build, Test, Deployment, and Application Run Successful!'         
+        }         
+        failure {             
+            echo 'Build Failed. Check logs!'         
+        }     
+    }
+}
