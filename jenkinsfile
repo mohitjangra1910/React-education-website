@@ -3,29 +3,32 @@ pipeline {
     stages {         
         stage('Install Dependencies') {             
             steps {                 
-                // Install Node.js and npm
+                # Install Node.js and npm
                 sh '''                 
                 echo "Installing Node.js and npm..."                 
-                // curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -                
+                # Uncomment the following line to install Node.js
+                # curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -                
                 sudo apt-get install -y nodejs                 
                 '''                 
-                // Install npm dependencies                 
+                # Install npm dependencies                 
                 sh 'npm install'             
             }  
         }
         stage('Run Tests') {             
             steps {                 
-                // Run custom test script
+                # Run npm test
                 sh 'npm run test'             
             }         
         }         
         stage('Build') {             
             steps {                 
+                # Build the application
                 sh 'npm run build'             
             }         
         }         
         stage('Deploy') {             
             steps {                 
+                # Deploy the application using PM2
                 sh '''                 
                 pm2 stop app || true                 
                 pm2 start app.js --name "node-app"                 
@@ -34,6 +37,7 @@ pipeline {
         }     
         stage('Run Application') {
             steps {
+                # Start the application
                 sh '''
                 echo "Starting the application..."
                 npm start
