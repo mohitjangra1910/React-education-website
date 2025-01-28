@@ -1,13 +1,14 @@
 pipeline {     
     agent any      
     stages {         
+        stage('Checkout SCM'){
+            steps {
+                checkout scm
+            }
+        }
         stage('Install Dependencies') {             
             steps {                 
-                sh '''                 
-                echo "Installing Node.js and npm..."                 
-                sudo apt-get install -y nodejs                 
-                '''                 
-                sh 'npm install'             
+                sh 'apt-get install -y nodejs npm'
             }  
         }
         stage('Run Tests') {             
